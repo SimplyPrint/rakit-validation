@@ -6,6 +6,8 @@ use Closure;
 use Rakit\Validation\Rules\Interfaces\BeforeValidate;
 use Rakit\Validation\Rules\Interfaces\ModifyValue;
 use Rakit\Validation\Rules\Required;
+use Rakit\Validation\Rules\NotNull;
+use Rakit\Validation\Rules\NotEmpty;
 
 class Validation
 {
@@ -357,7 +359,9 @@ class Validation
     {
         return false === $attribute->isRequired() and
             false === $rule->isImplicit() and
-            false === $rule instanceof Required;
+            false === $rule instanceof Required and
+            false === $rule instanceof NotEmpty and
+            false === $rule instanceof NotNull;
     }
 
     /**

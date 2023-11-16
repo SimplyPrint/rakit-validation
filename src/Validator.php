@@ -162,6 +162,8 @@ class Validator
             'defaults'                  => new Rules\Defaults,
             'default'                   => new Rules\Defaults, // alias of defaults
             'nullable'                  => new Rules\Nullable,
+            'not_null'                  => new Rules\NotNull,
+            'not_empty'                 => new Rules\NotEmpty
         ];
 
         foreach ($baseValidator as $key => $validator) {
