@@ -1,5 +1,6 @@
 {
   "name": "rakit/validation",
+  "version": "1.4.0",
   "description": "PHP Laravel like standalone validation library",
   "license": "MIT",
   "authors": [
