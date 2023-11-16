@@ -357,11 +357,11 @@ class Validation
      */
     protected function ruleIsOptional(Attribute $attribute, Rule $rule): bool
     {
-        return false === $attribute->isRequired() and
-            false === $rule->isImplicit() and
-            false === $rule instanceof Required and
-            false === $rule instanceof NotEmpty and
-            false === $rule instanceof NotNull;
+        return !$attribute->isRequired() &&
+            !$rule->isImplicit() &&
+            !($rule instanceof Required) &&
+            (!($this->hasValue($attribute->getKey()) &&
+                (($rule instanceof NotEmpty) || ($rule instanceof NotNull))));
     }
 
     /**
