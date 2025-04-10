@@ -1,6 +1,6 @@
 {
   "name": "simplyprint/rakit-validation",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "PHP Laravel like standalone validation library",
   "license": "MIT",
   "authors": [
