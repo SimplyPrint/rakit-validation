@@ -219,11 +219,10 @@ class Validation
             }
         }
 
-        // set other attributes to each attributes
+        // Let every expanded attribute see its siblings, sharing one array between
+        // them. Handing each its own copy of the other N-1 was quadratic.
         foreach ($attributes as $i => $attr) {
-            $otherAttributes = $attributes;
-            unset($otherAttributes[$i]);
-            $attr->setOtherAttributes($otherAttributes);
+            $attr->setSiblingAttributes($attributes, $i);
         }
 
         return $attributes;
