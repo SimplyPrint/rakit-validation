@@ -26,6 +26,18 @@ class Attribute
     /** @var array */
     protected $otherAttributes = [];
 
+    /**
+     * Sibling attributes of one wildcard expansion, INCLUDING $this. Shared by
+     * every sibling, so the expansion costs one array rather than one per
+     * attribute; getOtherAttributes() removes $this on demand.
+     *
+     * @var array|null
+     */
+    protected $siblingAttributes = null;
+
+    /** @var int|string|null Index of $this within $siblingAttributes */
+    protected $siblingIndex = null;
+
     /** @var array */
     protected $keyIndexes = [];
 
@@ -110,13 +122,41 @@ class Attribute
     }
 
     /**
+     * Share one sibling set across a whole wildcard expansion.
+     *
+     * Giving each attribute its own copy of the other N-1 made a wildcard rule
+     * quadratic in memory: N arrays of N entries, all live at once. A 6,000-point
+     * `outline.*.*` cost 3 GB that way. Assigning the same array to every sibling
+     * is copy-on-write, so the set is stored once; the per-attribute view is built
+     * only if something actually asks for it.
+     *
+     * @param array      $siblings All expanded attributes, including $this
+     * @param int|string $index    Key of $this within $siblings
+     * @return void
+     */
+    public function setSiblingAttributes(array $siblings, $index)
+    {
+        $this->siblingAttributes = $siblings;
+        $this->siblingIndex = $index;
+        $this->otherAttributes = [];
+    }
+
+    /**
      * Get other attributes
      *
      * @return array
      */
     public function getOtherAttributes(): array
     {
-        return $this->otherAttributes;
+        if ($this->siblingAttributes === null) {
+            return $this->otherAttributes;
+        }
+
+        $others = $this->siblingAttributes;
+        unset($others[$this->siblingIndex]);
+
+        // Reindexed, matching what setOtherAttributes() produced.
+        return array_values($others);
     }
 
     /**
